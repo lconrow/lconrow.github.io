@@ -20,9 +20,13 @@
 	// load geoJSON
 	var murdersgeoJSON = "http://lconrow.github.io/MFMmap/kemper.geojson"
 
-	$.getJSON(murdersgeoJSON,function(data){
+	$.getJSON(murdersgeoJSON,function(response){
+	var geojsonLayer = new L.GeoJSON(response, {
+        style: style,
+    	onEachFeature: onEachFeature
+   	 });
    	 // add GeoJSON layer to the map once the file is loaded
-    	L.geoJson(data).addTo(map);
+    	geojsonLayer.addTo(map);
 	});
 </script>
 </body>
