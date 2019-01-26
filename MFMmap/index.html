@@ -20,8 +20,9 @@
 <body>
 	<div id="murder-map"></div>
 	<script>
-	var murderTiles = L.tileLayer('http://a.tiles.mapbox.com/v3/lyzidiamond.map-ietb6srb/{z}/{x}/{y}.png', {
-		maxZoom: 18
+	var OpenStreetMap_Mapnik = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+	maxZoom: 19,
+	attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 	});
 
 	$.getJSON($('link[rel="points"]').attr("href"), function(data) {
@@ -31,7 +32,7 @@
 			}
 		});
 		var map = L.map('murder-map').fitBounds(geojson.getBounds());
-		murderTiles.addTo(map);
+		OpenStreetMap_Mapnik.addTo(map);
 		geojson.addTo(map);
 	});
 	</script>
