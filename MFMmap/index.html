@@ -1,43 +1,36 @@
-
 <!DOCTYPE html>
 <html>
 <head>
 	<title>MFM Map</title>
-	<style>
+  <style>
         body { padding: 0; margin: 0;   }
         html,    body,   #map {height: 100%;	}
 
     </style>
 	<!-- External Stylesheets -->
 	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
-
-	  <!-- Links to GeoJSON data we'll use in the map. -->
-	  <link rel="location" href="kemper.geojson" type="application/json"/>
 </head>
 <body>
 	<!-- Our web map and content will go here -->
-	<div id="Murder-map"></div>
-	<!-- Add the Leaflet and jquery JavaScript library -->
+	<div id="map" style="width: 715px; height: 375px"></div>
+	<!-- Add the Leaflet JavaScript library -->
 	<script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
-	<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+  <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
 	<script>
     	// Create variable to hold map element, give initial settings to map
-    	var map = L.map('map',{ center: [38.18, -121.01], zoom: 8});
-
+    	var map = L.map('map',{ center: [38.18, -121.01], zoom: 11});
     	// Add OpenStreetMap tile layer to map element
-		var murderTiles = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', { attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>' }).addTo(map);
-		// load geoJSON
-		$.getJSON($('link[rel="points"]').attr("href"), function(data) {
-		    var geojson = L.geoJson(data, {
-		      onEachFeature: function (feature, layer) {
-		        layer.bindPopup(feature.properties.name);
-		      }
-		    });
-		    var map = L.map('murder-map').fitBounds(geojson.getBounds());
-		    murderTiles.addTo(map);
-		    geojson.addTo(map);
-		  });
-
-	</script>
+	L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', { attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>' }).addTo(map);
+	// load geoJSON
+	var murdersgeoJSON = "http://lconrow.github.io/MFMmap/kemper.geojson"
+	$.getJSON(murdersgeoJSON,function(response){
+	var geojsonLayer = new L.GeoJSON(response, {
+        style: style,
+    	onEachFeature: onEachFeature
+   	 });
+   	 // add GeoJSON layer to the map once the file is loaded
+    	geojsonLayer.addTo(map);
+	});
+</script>
 </body>
 </html>
