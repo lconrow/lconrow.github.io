@@ -18,14 +18,11 @@
     	// Add OpenStreetMap tile layer to map element
 	L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', { attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>' }).addTo(map);
 	// load geoJSON
-	var murderGeojsonURL = "http://lconrow.github.io/MFMmap/kemper.geojson"
-	$.getJSON(murderGeojsonURL, function(response) {
-    	var geojsonLayer = new L.GeoJSON(response, {
-        style: style,
-        onEachFeature: onEachFeature
-   	});
-    	geojsonLayer.addTo(map);    
-	});
+	// load GeoJSON from an external file
+	$.getJSON("http://lconrow.github.io/MFMmap/kemper.geojson",function(data){
+    // add GeoJSON layer to the map once the file is loaded
+    L.geoJson(data).addTo(map);
+});
 </script>
 </body>
 </html>
