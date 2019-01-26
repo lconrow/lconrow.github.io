@@ -1,69 +1,38 @@
-
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Syriac Places</title>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet"
-    href="http://cdn.leafletjs.com/leaflet-0.6.2/leaflet.css" />
-  <!--[if lte IE 8]>
-    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.4/leaflet.ie.css" />
-  <![endif]-->
-  <link rel="stylesheet" href="./markercluster/MarkerCluster.css" />
-  <link rel="stylesheet" href="./markercluster/MarkerCluster.Default.css" />
-  <!--[if lte IE 8]><link rel="stylesheet" href="markercluster/MarkerCluster.Default.ie.css" /><![endif]-->
+	<title>MFM Map</title>
 
 
-  <!-- Links to GeoJSON data we'll use in the map. -->
-  <link rel="location" href="http://sgillies.github.io/syriaca/syriaca.json" type="application/json"/>
-
-
+  <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.css" />
+  <style type="text/css">
+  body {  padding: 0; margin: 0;  }
+  html, body, #murder-map {  height: 100%;  }
+  </style>
+  //add Leaflet and JQuery library
+  <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
+  <script src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
+  <link rel="points" type="application/json" href=".kemper2.json">
 </head>
 <body>
-  <div id="content"></div><h1>Syriac Places</h1></div>
-  <div id="map" style="height:800px;width:100%;"></div>
-  <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
-  <script src="http://cdn.leafletjs.com/leaflet-0.6.2/leaflet.js"></script>
-  <script src="./markercluster/leaflet.markercluster.js"></script>
+  <div id="murder-map"></div>
   <script>
-    var terrain = L.tileLayer(
-      'http://api.tiles.mapbox.com/v3/sgillies.map-ac5eaoks/{z}/{x}/{y}.png', {
-        attribution: "ISAW, 2012"
-        });
+  var murderTiles = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+    subdomains: 'abcd',
+    maxZoom: 19
+    });
 
-    /* Not added by default, only through user control action */
-    var streets = L.tileLayer(
-      'http://api.tiles.mapbox.com/v3/sgillies.map-pmfv2yqx/{z}/{x}/{y}.png', {
-        attribution: "ISAW, 2012"
-        });
-
-    var imperium = L.tileLayer(
-      'http://pelagios.dme.ait.ac.at/tilesets/imperium//{z}/{x}/{y}.png', {
-        attribution: 'Tiles: <a href="http://pelagios-project.blogspot.com/2012/09/a-digital-map-of-roman-empire.html">Pelagios</a>, 2012; Data: NASA, OSM, Pleiades, DARMC',
-        maxZoom: 11
-        });
-
-  /* Load points GeoJSON and add to map */
-  $.getJSON($('link[rel="location"]').attr("href"), function(data) {
+  $.getJSON($('link[rel="points"]').attr("href"), function(data) {
     var geojson = L.geoJson(data, {
       onEachFeature: function (feature, layer) {
-        layer.bindPopup(feature.properties.title);
+        layer.bindPopup(feature.properties.name);
       }
     });
-    var map = L.map('map').fitBounds(geojson.getBounds());
-    terrain.addTo(map);
-    L.control.layers({
-      "Terrain (default)": terrain,
-      "Streets": streets,
-      "Imperium": imperium,
-      }).addTo(map);
-    var markers = L.markerClusterGroup();
-    markers.addLayer(geojson);
-    map.addLayer(markers);
+    var map = L.map('murder-map').fitBounds(geojson.getBounds());
+    murderTiles.addTo(map);
+    geojson.addTo(map);
   });
-
   </script>
 </body>
 </html>
-
