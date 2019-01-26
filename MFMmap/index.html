@@ -20,8 +20,8 @@
 <body>
 	<div id="murder-map"></div>
 	<script>
-	var murderTiles = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', { 
-		attribution: '© OpenStreetMap' })
+	var murderTiles = L.tileLayer('http://a.tiles.mapbox.com/v3/lyzidiamond.map-ietb6srb/{z}/{x}/{y}.png', {
+		maxZoom: 18
 	});
 
 	$.getJSON($('link[rel="points"]').attr("href"), function(data) {
