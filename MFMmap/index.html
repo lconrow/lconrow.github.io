@@ -5,10 +5,24 @@
 	<title>MFM Map</title>
 	<!-- External Stylesheets -->
 	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
+	<style>
+        body {
+            padding: 1;
+            margin: 1;
+        }
+
+        html,
+        body,
+        #map {
+            height: 100%;
+        }
+
+    </style>
+
 </head>
 <body>
 	<!-- Our web map and content will go here -->
-	<div id="map" style="width: 715px; height: 375px"></div>
+	<div id="map"></div>
 	<!-- Add the Leaflet JavaScript library -->
 	<script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
 	<script>
