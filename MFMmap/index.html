@@ -1,52 +1,37 @@
-
 <!DOCTYPE html>
 <html>
 <head>
-  <title>MFM map</title>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet"
-    href="http://cdn.leafletjs.com/leaflet-0.6.2/leaflet.css" />
-  <!--[if lte IE 8]>
-    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.4/leaflet.ie.css" />
-  <![endif]-->
-  <link rel="stylesheet" href="./markercluster/MarkerCluster.css" />
-  <link rel="stylesheet" href="./markercluster/MarkerCluster.Default.css" />
-  <!--[if lte IE 8]><link rel="stylesheet" href="markercluster/MarkerCluster.Default.ie.css" /><![endif]-->
+	<title>MFM Map</title>
+  <style>
+        body { padding: 0; margin: 0;   }
+        html,    body,   #map {height: 100%;	}
 
-
-  <!-- Links to GeoJSON data we'll use in the map. -->
-  <link rel="location" href="kemper.geojson" type="application/json"/>
-
-
+    </style>
+	<!-- External Stylesheets -->
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
 </head>
 <body>
-  
-  <div id="murder-map" style="height:800px;width:100%;"></div>
+	<!-- Our web map and content will go here -->
+	<div id="map"></div>
+	<!-- Add the Leaflet JavaScript library -->
+	<script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
   <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
-  <script src="http://cdn.leafletjs.com/leaflet-0.6.2/leaflet.js"></script>
-  <script src="./markercluster/leaflet.markercluster.js"></script>
-  <script>
-    var murderTiles = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', 
-    { attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>' }).addTo(map);
-  
-
-  /* Load points GeoJSON and add to map */
-  $.getJSON($('link[rel="location"]').attr("href"), function(data) {
-    var geojson = L.geoJson(data, {
-      onEachFeature: function (feature, layer) {
-        layer.bindPopup(feature.properties.title);
-      }
-    });
-    var map = L.map('murder-map').fitBounds(geojson.getBounds());
-    murderTiles.addTo(map);
-  
-    var markers = L.markerClusterGroup();
-    markers.addLayer(geojson);
-    map.addLayer(markers);
-  });
-
-  </script>
+	<script>
+    	// Create variable to hold map element, give initial settings to map
+    	var map = L.map('map',{ center: [38.18, -121.01], zoom: 9});
+    	// Add OpenStreetMap tile layer to map element
+	    L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', 
+      { attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>' }).addTo(map);
+	     // load geoJSON
+	      var murdersgeoJSON = "http://lconrow.github.io/MFMmap/kemper.geojson"
+	       $.getJSON(murdersgeoJSON,function(response){
+	          var geojsonLayer = new L.GeoJSON(response, {
+        style: style,
+    	onEachFeature: onEachFeature
+   	 });
+   	 // add GeoJSON layer to the map once the file is loaded
+    	geojsonLayer.addTo(map);
+	});
+</script>
 </body>
 </html>
-
