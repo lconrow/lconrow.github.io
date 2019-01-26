@@ -1,39 +1,31 @@
+
 <!DOCTYPE html>
 <html>
 <head>
-	<title>MFM Map</title>
-
-
-  <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.css" />
-  <style type="text/css">
-  body {  padding: 0; margin: 0;  }
-  html, body, #murder-map {  height: 100%;  }
-  </style>
-  
-  <link rel="points" type="application/json" href=".kemper2.json">
+	<title>Kemper Map</title>
+	<!-- External Stylesheets -->
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
+	<style type="text/css">
+	    body {padding: 0; margin: 0;}
+			html, body, #murder-map height: 100%; }
+	</style>
+	     
 </head>
 <body>
-  <div id="murder-map"></div>
-  <!-- add Leaflet and JQuery library -->
-  <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
-  <script src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
-  <script>
-  var murderTiles = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
-    subdomains: 'abcd',
-    maxZoom: 19
-    });
+	<!-- Our web map and content will go here -->
+	<div id="murder-map" "></div>
+	<!-- Add the Leaflet JavaScript library -->
+	<script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
+	<script>
+    	// Create variable to hold map element, give initial settings to map
+    	var map = L.map('murder-map',{ center: [38.40, -121.155], zoom: 8});
 
-  $.getJSON($('link[rel="points"]').attr("href"), function(data) {
-    var geojson = L.geoJson(data, {
-      onEachFeature: function (feature, layer) {
-        layer.bindPopup(feature.properties.Episode);
-      }
-    });
-    var map = L.map('murder-map').fitBounds(geojson.getBounds());
-    murderTiles.addTo(map);
-    geojson.addTo(map);
-  });
-  </script>
+    // Add OpenStreetMap tile layer to map element
+		L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+	    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+	    subdomains: 'abcd',
+	    maxZoom: 19
+	    });
+	</script>
 </body>
 </html>
