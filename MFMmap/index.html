@@ -13,20 +13,18 @@
 	<script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
 	<script>
     	// Create variable to hold map element, give initial settings to map
-    	var map = L.map('map',{ center: [38.18, -121.01], zoom: 6});
+    	var map = L.map('map',{ center: [38.18, -121.01], zoom: 7});
 
     	// Add OpenStreetMap tile layer to map element
 	L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', { attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>' }).addTo(map);
 	// load geoJSON
-	var murdersgeoJSON = "http://lconrow.github.io/MFMmap/kemper.json"
-
-	$.getJSON(murdersgeoJSON,function(response){
-	var geojsonLayer = new L.GeoJSON(response, {
+	var murderGeojsonURL = "http://lconrow.github.io/MFMmap/kemper.geojson"
+	$.getJSON(murderGeojsonURL, function(response) {
+    	var geojsonLayer = new L.GeoJSON(response, {
         style: style,
-    	onEachFeature: onEachFeature
-   	 });
-   	 // add GeoJSON layer to the map once the file is loaded
-    	geojsonLayer.addTo(map);
+        onEachFeature: onEachFeature
+   	});
+    	geojsonLayer.addTo(map);    
 	});
 </script>
 </body>
