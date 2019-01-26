@@ -24,11 +24,10 @@
 	maxZoom: 19,
 	attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 	});
-
 	$.getJSON($('link[rel="points"]').attr("href"), function(data) {
 		var geojson = L.geoJson(data, {
 			onEachFeature: function (feature, layer) {
-				layer.bindPopup(feature.properties.Episode);
+				layer.bindPopup('<h1>'+feature.properties.Episode+'</h1><p>Victim(s): '+feature.properties.Victims(s)+'</p>');
 			}
 		});
 		var map = L.map('murder-map').fitBounds(geojson.getBounds());
