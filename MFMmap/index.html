@@ -13,18 +13,13 @@
   <div id="map"></div>
 
   <script>
+    var layer = new L.StamenTileLayer("toner");
+    var map = new L.Map("element_id", {
+    center: new L.LatLng(40.00, -105.27),
+    zoom: 12
+            });
+     map.addLayer(layer);
 
-  // initialize the map
-  var map = L.map('map').setView([40.00, -105.27], 13);
-
-  // load a tile layer
-  L.tileLayer('http://tile.stamen.com/toner/{z}/{x}/{y}.png',
-    {
-      attribution: Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.
-      maxZoom: 17,
-      minZoom: 9
-    }).addTo(map);
-   L.marker([40.001111, -105.274004]).bindPopup("JonBenét Ramsey").addTo(map);
 
   </script>
 </body>
