@@ -3,14 +3,14 @@
 <head>
 	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5/leaflet.css" />
 	<!--[if lte IE 8]>
-     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5/leaflet.ie.css" />
+     	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5/leaflet.ie.css" />
  	<![endif]-->
  	<style type="text/css">
 		body {
 			padding: 0;
 			margin: 0;
 		}
-		html, body, #cupcake-map {
+		html, body, #murder-map {
 			height: 100%;
 		}
  	</style>
@@ -18,9 +18,9 @@
 	<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
 	<link rel="points" type="application/json" href="./kemper.json">
 <body>
-	<div id="cupcake-map"></div>
+	<div id="murder-map"></div>
 	<script>
-	var cupcakeTiles = L.tileLayer('http://a.tiles.mapbox.com/v3/lyzidiamond.map-ietb6srb/{z}/{x}/{y}.png', {
+	var murderTiles = L.tileLayer('http://a.tiles.mapbox.com/v3/lyzidiamond.map-ietb6srb/{z}/{x}/{y}.png', {
 		maxZoom: 18
 	});
 	$.getJSON($('link[rel="points"]').attr("href"), function(data) {
@@ -29,8 +29,8 @@
 				layer.bindPopup(feature.properties.Episode);
 			}
 		});
-		var map = L.map('cupcake-map').fitBounds(geojson.getBounds());
-		cupcakeTiles.addTo(map);
+		var map = L.map('murder-map').fitBounds(geojson.getBounds());
+		murderTiles.addTo(map);
 		geojson.addTo(map);
 	});
 	</script>
