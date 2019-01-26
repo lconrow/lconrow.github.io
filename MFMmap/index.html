@@ -27,7 +27,18 @@
 	$.getJSON($('link[rel="points"]').attr("href"), function(data) {
 		var geojson = L.geoJson(data, {
 			onEachFeature: function (feature, layer) {
-				layer.bindPopup('<h1>'+feature.properties.Episode+'</h1><p>Victim(s): '+feature.properties.Victims(s)+'</p>');
+				layer.bindPopup(feature.properties.Episode);
+			}
+		},
+		pointToLayer: function (feature, latlng) {
+					return L.circleMarker(latlng, {
+									radius: 8,
+									fillColor: "#800080",
+									color: "#D107D1",
+									weight: 1,
+									opacity: 1,
+									fillOpacity: 0.8
+							});
 			}
 		});
 		var map = L.map('murder-map').fitBounds(geojson.getBounds());
