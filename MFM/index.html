@@ -10,7 +10,14 @@
 	<!--[if lte IE 8]>
      <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5/leaflet.ie.css" />
  	<![endif]-->
- 	<style>
+
+	<script src="http://cdn.leafletjs.com/leaflet-0.5/leaflet.js"></script>
+	<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+
+	<link rel="points" type="application/json" href="./kemper.json">
+
+
+	<style type="text/css">
 		body {
 			padding: 0;
 			margin: 0;
@@ -19,13 +26,7 @@
 			height: 100%;
 		}
 
- 	</style>
-	
-	<script src="http://cdn.leafletjs.com/leaflet-0.5/leaflet.js"></script>
-	<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
 
-	<link rel="points" type="application/json" href="./kemper.json">
-	<style>
 	/*
 * These CSS rules affect the tooltips within maps with the custom-popup
 * class. See the full CSS for all customizable options:
@@ -47,6 +48,7 @@ color:rgba(255,255,255,0.5);
 
 	</style>
 	</head>
+
 <body>
 	<div class='custom-popup' id="murder-map"></div>
 	<script>
@@ -56,34 +58,28 @@ color:rgba(255,255,255,0.5);
 	});
 
 
-	/*var cafeIcon = L.AwesomeMarkers.icon({
-	    prefix: 'fa', //font awesome rather than bootstrap
-	    markerColor: 'red', // see colors above
-	    icon: 'coffee' //http://fortawesome.github.io/Font-Awesome/icons/
-	});
-	// Popup function with murder properties
-  	function popupMurder(feature, layer){
-    	layer.bindPopup("<strong>Episode: </strong>" + feature.properties.Episode
-          						+"<br>" + "<strong>Perpetrator: </strong>" + feature.properties.Perpetrator
-                      +"<br>" + "<strong>Victim(s): </strong>" + feature.properties.Victim
-                      +"<br>" + "<strong>Date: </strong>" + feature.properties.Date);
-  }
+	var smallIcon = new L.Icon({
+      iconSize: [20,20],
+      iconAnchor: [10,10],
+      popupAnchor:  [0,-5],
+      iconUrl: 'svgs/circle-11.svg'
+  });
 
-*/
 
 
 	$.getJSON($('link[rel="points"]').attr("href"), function(data) {
 		var geojson = L.geoJson(data, {
-
-
-			onEachFeature: function (feature, layer) {
-				layer.bindPopup("<strong>Episode: </strong>" + feature.properties.Episode
-	          						+"<br>" + "<strong>Perpetrator: </strong>" + feature.properties.Perpetrator
-	                      +"<br>" + "<strong>Victim(s): </strong>" + feature.properties.Victim
-	                      +"<br>" + "<strong>Date: </strong>" + feature.properties.Date);
-			}
-
-			});
+			pointToLayer: function (feature, latlng) {
+						return L.marker(latlng, {
+							icon: smallIcon
+						}).on('mouseover', function() {//this is new
+                    this.bindPopup("<strong>Episode: </strong>" + feature.properties.Episode
+								 									 +"<br>" + "<strong>Perpetrator: </strong>" + feature.properties.Perpetrator
+								 									 +"<br>" + "<strong>Victim(s): </strong>" + feature.properties.Victim
+								 									 +"<br>" + "<strong>Date: </strong>" + feature.properties.Date).openPopup();
+                });
+            }
+        });
 
 
 		var map = L.map('murder-map').fitBounds(geojson.getBounds());
