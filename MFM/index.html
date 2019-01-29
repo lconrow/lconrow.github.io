@@ -1,18 +1,18 @@
 <!doctype html>
 <html>
 <head>
-	<!-- Icons from Font Awesome -->
-  <!-- Font Awesome CSS -->
-	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet"><!--this is new-->
-	<link rel="stylesheet" href="leaflet_awesome_markers.css"><!--this is new-->
+
   <!-- Leaflet -->
 	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5/leaflet.css" />
 	<!--[if lte IE 8]>
      <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5/leaflet.ie.css" />
  	<![endif]-->
+	<link rel="stylesheet" href="http://libs.cartodb.com/cartodb.js/v3/3.15/themes/css/cartodb.css" />
+
 
 	<script src="http://cdn.leafletjs.com/leaflet-0.5/leaflet.js"></script>
 	<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+	<script src="http://libs.cartodb.com/cartodb.js/v3/3.15/cartodb.js"></script>
 
 	<link rel="points" type="application/json" href="./kemper.json">
 
@@ -35,36 +35,89 @@
 .custom-popup .leaflet-popup-content-wrapper {
 background:#2a2a2a;
 color:#fff;
-font-size:16px;
+opacity: 0.9;
+font-size:15px;
 line-height:24px;
 border-radius: 3px;
 }
 .custom-popup .leaflet-popup-content-wrapper a {
 color:rgba(255,255,255,0.5);
 }
+.custom-popup .leaflet-popup-tip-container {
+
+	opacity: 0.85;
+  width:30px;
+  height:15px;
+  }
 .custom-popup .leaflet-popup-tip {
-    background: #2a2a2a;
-}
+	    background:  #2a2a2a;
+			}
+
+			#overlay {
+				position: fixed;
+				display: none;
+				width: 100%;
+				height: 100%;
+				top: 0;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				background-color: rgba(0,0,0,0.8);
+				z-index: 2;
+				cursor: pointer;
+			}
+			#text{
+			  position: absolute;
+			  top: 50%;
+			  left: 50%;
+			  font-size: 40px;
+			  color: white;
+			  transform: translate(-50%,-50%);
+			  -ms-transform: translate(-50%,-50%);
+			}
 
 	</style>
 	</head>
 
-<body>
+	<div id="overlay"  onclick="off()">
+	    <div id="text"><h2>Don't be mean</h2></div>
+	</div>
+
+	<script>
+function on() {
+  document.getElementById("overlay").style.display = "block";
+}
+
+function off() {
+  document.getElementById("overlay").style.display = "none";
+}
+</script>
+
+
 	<div class='custom-popup' id="murder-map"></div>
 	<script>
-	var OpenStreetMap_Mapnik = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-	maxZoom: 19,
-	attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-	});
+
+	var layer = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
+         });
 
 
-  var smallIcon = new L.Icon({
+
+
+	var smallIcon = new L.Icon({
       iconSize: [20,20],
       iconAnchor: [10,10],
       popupAnchor:  [0,-5],
-      iconUrl: './circle-11.svg'
+      iconUrl: 'svgs/circle-11.svg'
   });
 
+
+	$(document).ready(function () {
+	$('#overlay').fadeIn();
+});
+$('button').click(function () {
+	$('#overlay').fadeOut(200, "linear");
+});
 
 
 	$.getJSON($('link[rel="points"]').attr("href"), function(data) {
@@ -73,7 +126,7 @@ color:rgba(255,255,255,0.5);
 						return L.marker(latlng, {
 							icon: smallIcon
 						}).on('mouseover', function() {//this is new
-                    this.bindPopup("<strong>Episode: </strong>" + feature.properties.Episode
+                    this.bindPopup("<strong>Episode </strong>" + feature.properties.Episode
 								 									 +"<br>" + "<strong>Perpetrator: </strong>" + feature.properties.Perpetrator
 								 									 +"<br>" + "<strong>Victim(s): </strong>" + feature.properties.Victim
 								 									 +"<br>" + "<strong>Date: </strong>" + feature.properties.Date).openPopup();
@@ -83,7 +136,7 @@ color:rgba(255,255,255,0.5);
 
 
 		var map = L.map('murder-map').fitBounds(geojson.getBounds());
-		OpenStreetMap_Mapnik.addTo(map);
+		layer.addTo(map);
 		geojson.addTo(map);
 	});
 	</script>
