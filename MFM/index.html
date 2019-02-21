@@ -27,6 +27,7 @@
 		}
 
 
+
 	/*
 * These CSS rules affect the tooltips within maps with the custom-popup
 * class. See the full CSS for all customizable options:
@@ -36,6 +37,7 @@
 background:#2a2a2a;
 color:#fff;
 opacity: 0.9;
+font-family: "Arial", Helvetica, sans-serif;
 font-size:15px;
 line-height:24px;
 border-radius: 3px;
@@ -70,17 +72,29 @@ color:rgba(255,255,255,0.5);
 			  position: absolute;
 			  top: 50%;
 			  left: 50%;
-			  font-size: 40px;
+			  /*font-size: 20px;*/
+				font-size:2vw;
+				font-family: "Arial", Helvetica, sans-serif;
 			  color: white;
 			  transform: translate(-50%,-50%);
 			  -ms-transform: translate(-50%,-50%);
 			}
 
+
+
+
 	</style>
 	</head>
 
+
 	<div id="overlay"  onclick="off()">
-	    <div id="text"><h2>Don't be mean</h2></div>
+	    <div id="text">Look, listen: This map is for informational purposes
+				  only and should not be used to trespass, victimize, harass, bother, intimidate, stalk, surveil,
+					humiliate, discriminate against, or otherwise annoy anyone. Please respect the dignity
+					of the victims and the privacy of current residents and their neighbors.<br />
+					<br />
+					Click anywhere to continue.
+					</div>
 	</div>
 
 	<script>
@@ -97,19 +111,10 @@ function off() {
 	<div class='custom-popup' id="murder-map"></div>
 	<script>
 
-	var layer = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
+	var layer = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://cartodb.com/attributions">CartoDB</a>'
          });
 
-
-
-
-	var smallIcon = new L.Icon({
-      iconSize: [20,20],
-      iconAnchor: [10,10],
-      popupAnchor:  [0,-5],
-      iconUrl: 'circle-11.svg'
-  });
 
 
 	$(document).ready(function () {
@@ -121,17 +126,36 @@ $('button').click(function () {
 
 
 	$.getJSON($('link[rel="points"]').attr("href"), function(data) {
+
+
 		var geojson = L.geoJson(data, {
 			pointToLayer: function (feature, latlng) {
-						return L.marker(latlng, {
-							icon: smallIcon
-						}).on('mouseover', function() {//this is new
-                    this.bindPopup("<strong>Episode </strong>" + feature.properties.Episode
-								 									 +"<br>" + "<strong>Perpetrator: </strong>" + feature.properties.Perpetrator
-								 									 +"<br>" + "<strong>Victim(s): </strong>" + feature.properties.Victim
-								 									 +"<br>" + "<strong>Date: </strong>" + feature.properties.Date).openPopup();
-                });
-            }
+				//create icon
+				var smallIcon = new L.Icon({
+						iconSize: [20,20],
+						iconAnchor: [10,10],
+						popupAnchor:  [0,-5],
+						iconUrl: 'circle-11.svg'
+				});
+    var popupOptions = {maxWidth: 500};
+    var popupContent = "<strong>Perpetrator(s): </strong>" + feature.properties.Perpetrator
+			+"<br>" + "<strong>Victim(s): </strong>" + feature.properties.Victim
+			+"<br>" + "<strong>Date: </strong>" + feature.properties.Date
+			+"<br>" + "<strong>Episode </strong>" + feature.properties.Episode;
+    var circle = L.marker(latlng, {icon: smallIcon}).bindPopup(popupContent,popupOptions);
+
+		//zoom to location on Click
+		circle.on('click', function(){
+			map.setView(latlng, 12);
+			});
+    // Open the popup on mouseover.
+    circle.bindPopup(popupContent, popupOptions);
+    circle.on('mouseover', function(){
+        circle.openPopup(latlng);
+    });
+
+    return circle;
+							}
         });
 
 
