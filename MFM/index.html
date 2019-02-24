@@ -8,11 +8,12 @@
      <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5/leaflet.ie.css" />
  	<![endif]-->
 	<link rel="stylesheet" href="http://libs.cartodb.com/cartodb.js/v3/3.15/themes/css/cartodb.css" />
-
+	<link rel="stylesheet" href="https://rawgit.com/k4r573n/leaflet-control-osm-geocoder/master/Control.OSMGeocoder.css" />
 
 	<script src="http://cdn.leafletjs.com/leaflet-0.5/leaflet.js"></script>
 	<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
 	<script src="http://libs.cartodb.com/cartodb.js/v3/3.15/cartodb.js"></script>
+	<script src="https://rawgit.com/k4r573n/leaflet-control-osm-geocoder/master/Control.OSMGeocoder.js"></script>
 
 	<link rel="points" type="application/json" href="./mfmSP.json">
 
@@ -65,7 +66,7 @@ color:rgba(255,255,255,0.5);
 				right: 0;
 				bottom: 0;
 				background-color: rgba(0,0,0,0.8);
-				z-index: 2;
+				z-index: 9999;
 				cursor: pointer;
 			}
 			#text{
@@ -80,6 +81,38 @@ color:rgba(255,255,255,0.5);
 			  -ms-transform: translate(-50%,-50%);
 			}
 
+	a:link, a:visited {
+  color: black;
+  text-align: center;
+  text-decoration: none;
+
+		}
+
+
+
+
+			#aboutButton{
+			    display: flex;
+			    align-items: center;
+			    position: absolute;
+			    top: 10px;
+			    left: 50px;
+			    width: 50px;
+			    height: 25px;
+			    background-color: white;
+			    border-radius: 5px;
+			    border-color: gray;
+			    border-style: solid;
+			    border-width: 1px 1px 1px 1px;
+			    opacity: 0.8;
+			    text-align: center;
+			    z-index: 500;
+					box-shadow: 0 1px 5px rgba(0,0,0,0.65);
+			}
+			#aboutButton:hover{
+					opacity: 1;
+			    cursor: pointer;
+			}
 
 
 
@@ -98,6 +131,7 @@ color:rgba(255,255,255,0.5);
 	</div>
 
 	<script>
+
 function on() {
   document.getElementById("overlay").style.display = "block";
 }
@@ -109,13 +143,9 @@ function off() {
 
 
 	<div class='custom-popup' id="murder-map"></div>
+	<button id="aboutButton"><a href="./About" target="_blank">About</a></button>
+
 	<script>
-
-	var layer = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://cartodb.com/attributions">CartoDB</a>'
-         });
-
-
 
 	$(document).ready(function () {
 	$('#overlay').fadeIn();
@@ -123,6 +153,16 @@ function off() {
 $('button').click(function () {
 	$('#overlay').fadeOut(200, "linear");
 });
+
+var layer = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://cartodb.com/attributions">CartoDB</a>'
+         });
+
+				 /*https://{s}.basemaps.cartocdn.com/{light_all}/{z}/{x}/{y}.png*/
+
+var osmGeocoder = new L.Control.OSMGeocoder({placeholder: 'Search location...',text: 'Search',collapsed: false,position: 'topright'});
+
+
 
 
 	$.getJSON($('link[rel="points"]').attr("href"), function(data) {
@@ -138,7 +178,7 @@ $('button').click(function () {
 						iconUrl: 'circle-11.svg'
 				});
     var popupOptions = {maxWidth: 500};
-    var popupContent = "<strong>Perpetrator(s): </strong>" + feature.properties.Perpetrator
+    var popupContent = "<strong>Perpetrator(s): </strong>" + feature.properties.Perpetrator.
 			+"<br>" + "<strong>Victim(s): </strong>" + feature.properties.Victim
 			+"<br>" + "<strong>Date: </strong>" + feature.properties.Date
 			+"<br>" + "<strong>Episode </strong>" + feature.properties.Episode;
@@ -162,6 +202,7 @@ $('button').click(function () {
 		var map = L.map('murder-map').fitBounds(geojson.getBounds());
 		layer.addTo(map);
 		geojson.addTo(map);
+		map.addControl(osmGeocoder);
 	});
 	</script>
 </body>
