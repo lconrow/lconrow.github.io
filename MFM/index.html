@@ -15,7 +15,7 @@
 	<script src="http://libs.cartodb.com/cartodb.js/v3/3.15/cartodb.js"></script>
 	<script src="https://rawgit.com/k4r573n/leaflet-control-osm-geocoder/master/Control.OSMGeocoder.js"></script>
 
-	<link rel="points" type="application/json" href="./mfmSP.json">
+	<link rel="points" type="application/json" href="./kemper.json">
 
 
 	<style type="text/css">
@@ -178,7 +178,7 @@ var osmGeocoder = new L.Control.OSMGeocoder({placeholder: 'Search location...',t
 						iconUrl: 'circle-11.svg'
 				});
     var popupOptions = {maxWidth: 500};
-    var popupContent = "<strong>Perpetrator(s): </strong>" + feature.properties.Perpetrator.
+    var popupContent = "<strong>Perpetrator(s): </strong>" + feature.properties.Perpetrator
 			+"<br>" + "<strong>Victim(s): </strong>" + feature.properties.Victim
 			+"<br>" + "<strong>Date: </strong>" + feature.properties.Date
 			+"<br>" + "<strong>Episode </strong>" + feature.properties.Episode;
