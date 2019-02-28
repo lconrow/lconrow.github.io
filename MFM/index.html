@@ -1,25 +1,23 @@
 <!doctype html>
 <html>
 <head>
-<title>MFMmap</title>
+	<title>MFM Map</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Leaflet -->
-	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5/leaflet.css" />
-	<!--[if lte IE 8]>
-     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5/leaflet.ie.css" />
- 	<![endif]-->
-	<link rel="stylesheet" href="http://libs.cartodb.com/cartodb.js/v3/3.15/themes/css/cartodb.css" />
-	<link rel="stylesheet" href="https://rawgit.com/k4r573n/leaflet-control-osm-geocoder/master/Control.OSMGeocoder.css" />
 
-	<script src="http://cdn.leafletjs.com/leaflet-0.5/leaflet.js"></script>
-	<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
-	<script src="http://libs.cartodb.com/cartodb.js/v3/3.15/cartodb.js"></script>
-	<script src="https://rawgit.com/k4r573n/leaflet-control-osm-geocoder/master/Control.OSMGeocoder.js"></script>
+	<!--Leaflet-->
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css" integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA==" crossorigin=""/>
 
+
+	<!--Leaflet-->
+	<script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js" integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg==" crossorigin=""></script>
+
+	<!--json link-->
 	<link rel="points" type="application/json" href="./mfmSP.json">
 
 
 	<style type="text/css">
+
 		body {
 			padding: 0;
 			margin: 0;
@@ -30,181 +28,34 @@
 
 
 
-	/*
-* These CSS rules affect the tooltips within maps with the custom-popup
-* class. See the full CSS for all customizable options:
-* https://github.com/mapbox/mapbox.js/blob/001754177f3985c0e6b4a26e3c869b0c66162c99/theme/style.css#L321-L366
-*/
-.custom-popup .leaflet-popup-content-wrapper {
-background:#2a2a2a;
-color:#fff;
-opacity: 0.9;
-font-family: "Arial", Helvetica, sans-serif;
-font-size:15px;
-line-height:24px;
-border-radius: 3px;
-}
-.custom-popup .leaflet-popup-content-wrapper a {
-color:rgba(255,255,255,0.5);
-}
-.custom-popup .leaflet-popup-tip-container {
-
-	opacity: 0.85;
-  width:30px;
-  height:15px;
-  }
-.custom-popup .leaflet-popup-tip {
-	    background:  #2a2a2a;
-			}
-
-			#overlay {
-				position: fixed;
-				display: none;
-				width: 100%;
-				height: 100%;
-				top: 0;
-				left: 0;
-				right: 0;
-				bottom: 0;
-				background-color: rgba(0,0,0,0.8);
-				z-index: 9999;
-				cursor: pointer;
-			}
-			#text{
-			  position: absolute;
-			  top: 50%;
-			  left: 50%;
-			  /*font-size: 20px;*/
-				font-size:2vw;
-				font-family: "Arial", Helvetica, sans-serif;
-			  color: white;
-			  transform: translate(-50%,-50%);
-			  -ms-transform: translate(-50%,-50%);
-			}
-
-	a:link, a:visited {
-  color: black;
-  text-align: center;
-  text-decoration: none;
-
-		}
-
-
-
-
-			#aboutButton{
-			    display: flex;
-			    align-items: center;
-			    position: absolute;
-			    top: 10px;
-			    left: 50px;
-			    width: 50px;
-			    height: 25px;
-			    background-color: white;
-			    border-radius: 5px;
-			    border-color: gray;
-			    border-style: solid;
-			    border-width: 1px 1px 1px 1px;
-			    opacity: 0.8;
-			    text-align: center;
-			    z-index: 500;
-					box-shadow: 0 1px 5px rgba(0,0,0,0.65);
-			}
-			#aboutButton:hover{
-					opacity: 1;
-			    cursor: pointer;
-			}
-
-
-
 	</style>
-	</head>
+</head>
+<body>
+	<div id="murder-map"></div>
 
 
-	<div id="overlay"  onclick="off()">
-	    <div id="text">Look, listen: This map is for informational purposes
-				  only and should not be used to trespass, victimize, harass, bother, intimidate, stalk, surveil,
-					humiliate, discriminate against, or otherwise annoy anyone. Please respect the dignity
-					of the victims and the privacy of current residents and their neighbors.<br />
-					<br />
-					Click anywhere to continue.
-					</div>
-	</div>
-
-	<script>
-
-function on() {
-  document.getElementById("overlay").style.display = "block";
-}
-
-function off() {
-  document.getElementById("overlay").style.display = "none";
-}
-</script>
+<script>
 
 
-	<div class='custom-popup' id="murder-map"></div>
-	<button id="aboutButton"><a href="./about/" target="_blank">About</a></button>
+var map = L.map('murder-map').setView([39.74739, -105], 13);
 
-	<script>
-
-	$(document).ready(function () {
-	$('#overlay').fadeIn();
-});
-$('button').click(function () {
-	$('#overlay').fadeOut(200, "linear");
-});
-
-var layer = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://cartodb.com/attributions">CartoDB</a>'
-         });
-
-				 /*https://{s}.basemaps.cartocdn.com/{light_all}/{z}/{x}/{y}.png*/
-
-var osmGeocoder = new L.Control.OSMGeocoder({placeholder: 'Search location...',text: 'Search',collapsed: false,position: 'topright'});
-
-
-
-
-	$.getJSON($('link[rel="points"]').attr("href"), function(data) {
-
-
-		var geojson = L.geoJson(data, {
-			pointToLayer: function (feature, latlng) {
-				//create icon
-				var smallIcon = new L.Icon({
-						iconSize: [20,20],
-						iconAnchor: [10,10],
-						popupAnchor:  [0,-5],
-						iconUrl: 'circle-11.svg'
-				});
-    var popupOptions = {maxWidth: 500};
-    var popupContent = "<strong>Perpetrator(s): </strong>" + feature.properties.Perpetrator
-			+"<br>" + "<strong>Victim(s): </strong>" + feature.properties.Victim
-			+"<br>" + "<strong>Date: </strong>" + feature.properties.Date
-			+"<br>" + "<strong>Episode </strong>" + feature.properties.Episode;
-    var circle = L.marker(latlng, {icon: smallIcon}).bindPopup(popupContent,popupOptions);
-
-		//zoom to location on Click
-		circle.on('click', function(){
-			map.setView(latlng, 12);
-			});
-    // Open the popup on mouseover.
-    circle.bindPopup(popupContent, popupOptions);
-    circle.on('mouseover', function(){
-        circle.openPopup(latlng);
-    });
-
-    return circle;
-							}
-        });
-
-
-		var map = L.map('murder-map').fitBounds(geojson.getBounds());
-		layer.addTo(map);
-		geojson.addTo(map);
-		map.addControl(osmGeocoder);
+var layer = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+		maxZoom: 18,
+		attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+			'<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+			'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+		id: 'mapbox.light'
 	});
+
+
+
+layer.addTo(map);
+
+
+
+
+
+
 	</script>
 </body>
 </html>
